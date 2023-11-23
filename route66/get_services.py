@@ -28,6 +28,7 @@ def get_services():
         traefik_rule = labels.get(f"traefik.http.routers.{compose_service_name}.rule", None)
         image_url = labels.get("route66.image.url", None)
         group = labels.get("route66.group", None)
+        enabled = labels.get("route66.enable", "false").lower() == "true"
         cache_image = labels.get("route66.image.cache", "true").lower() == "true"
 
         url = None
@@ -43,9 +44,11 @@ def get_services():
             cache_image=cache_image,
         )
 
-        if group not in grouped_services:
-            grouped_services[group] = []
-        grouped_services[group].append(service)
+        if traefik_enabled and enabled:
+            if group not in grouped_services:
+                grouped_services[group] = []
+
+            grouped_services[group].append(service)
 
     return grouped_services
 
