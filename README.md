@@ -37,3 +37,8 @@ this tag will have the url to the image you wish to use for the link.
 `route66.group`
 
 this tag will be used to group the links together. if you have multiple services with the same group name they will be grouped together.
+
+### Enable
+`route66.enable`
+
+this tag will enable or disable the link from being displayed. if this tag is not present it will default to disabled.
