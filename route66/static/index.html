@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Image Grid</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .image-item {
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .image-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-link {
+            display: block;
+            width: 100%;
+        }
+
+        .image {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ListOfImageGrids">
+        <!-- Images will be dynamically added here using JavaScript -->
+    </div>
+
+    <script>
+        // Replace this URL with the actual URL of your JSON file
+        const jsonUrl = '/services';
+
+        // Fetch JSON data
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                const root = document.getElementById('ListOfImageGrids');
+                Object.keys(data).forEach(groupName => {
+                    const header = document.createElement('header');
+                    const gridTitle = document.createElement('h1');
+                    gridTitle.textContent = groupName;
+                    header.appendChild(gridTitle);
+                    root.appendChild(header);
+
+                    const imageGrid = document.createElement('imageGrid');
+                    imageGrid.classList.add('image-grid');
+                    data[groupName].forEach(service => {
+                        const imageItem = document.createElement('div');
+                        imageItem.classList.add('image-item');
+
+                        const imageLink = document.createElement('a');
+                        imageLink.href = service.url;
+                        imageLink.classList.add('image-link');
+
+                        const image = document.createElement('img');
+                        image.src = service.image_url;
+                        image.alt = service.name;
+                        image.classList.add('image');
+
+                        // Append elements to the DOM
+                        imageLink.appendChild(image);
+                        imageItem.appendChild(imageLink);
+                        imageGrid.appendChild(imageItem);
+                    })
+                    root.appendChild(imageGrid);
+                });
+            })
+            .catch(error => console.error('Error fetching JSON:', error));
+    </script>
+
+</body>
+</html>
