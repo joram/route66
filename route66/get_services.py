@@ -7,6 +7,7 @@ from typing import TypedDict
 
 class DockerServiceDetails(TypedDict):
     name: str
+    description: str
     traefik_enabled: bool
     traefik_rule: str
     url: str
@@ -28,6 +29,7 @@ def get_services():
         traefik_rule = labels.get(f"traefik.http.routers.{compose_service_name}.rule", None)
         image_url = labels.get("route66.image.url", None)
         group = labels.get("route66.group", None)
+        description = labels.get("route66.description", None)
         enabled = labels.get("route66.enable", "false").lower() == "true"
         cache_image = labels.get("route66.image.cache", "true").lower() == "true"
 
@@ -37,6 +39,7 @@ def get_services():
 
         service = DockerServiceDetails(
             name=container.name,
+            description=description,
             traefik_enabled=traefik_enabled,
             traefik_rule=traefik_rule,
             url=url,
